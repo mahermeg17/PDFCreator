@@ -2,12 +2,17 @@ package com.megadev.pdf;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,8 +27,24 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                executorService.submit(() -> {
+                    try {
+                        PdfTester pdfTester = new PdfTester();
+                        try {
+                            PDFBoxResourceLoader.init(getApplicationContext());
+                            pdfTester.Sample1();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                executorService.shutdown();
+
+
             }
         });
     }
