@@ -8,8 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,27 +25,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                ExecutorService executorService = Executors.newSingleThreadExecutor();
-                executorService.submit(() -> {
-                    try {
-                        PdfTester pdfTester = new PdfTester();
-                        try {
-                            ///
-                            PDFBoxResourceLoader.init(getApplicationContext());
-
-                            pdfTester.Sample1();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                executorService.shutdown();
-
-
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> {
+            try {
+                PdfTester pdfTester = new PdfTester();
+
+                pdfTester.generateReport();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+//                executorService.shutdown();
     }
 
     @Override
